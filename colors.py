@@ -9,6 +9,8 @@ class Colors:
         cyan = (21, 204, 209)
         dark_green = (10, 40, 15)
         blue = (13, 64, 225)
+        dark_blue = (44, 44, 127)
+        light_blue = (59, 85, 162)
 
         @classmethod
         def get_cell_colors(cls):
