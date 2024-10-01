@@ -2,7 +2,8 @@ import pygame, sys
 from game import Game
 
 pygame.init() 
-dark_blue = (23, 8, 87)
+
+title_front = pygame.font("Andalus", 40)
 
 screen = pygame.display.set_mode((530 ,620)) #350 = width 600 = height
 pygame.display.set_caption("Testris")
