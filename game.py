@@ -1,7 +1,13 @@
 from grid import Grid
 from blocks import *
 from block import *
+from constants import GAME_UPDATE
 import random
+
+#100 points for a single line clear
+#300 ponits for a double line clear
+#500 points for a triple line clear
+#5 point for each move down by the player
 
 class Game:
     def __init__(self):
@@ -14,13 +20,8 @@ class Game:
         #self.rotate_sound = pygame.mixer.sound("Name of sound file")
         #self.clear_sound = pygame.mixer.sound("Name of sound file")
         
-    def update_score(self, lines_cleared, move_down_points):
-        if lines_cleared == 1:
-            self.score += 100
-        elif lines_cleared == 2:
-            self.score += 300
-        elif lines_cleared == 3:
-            self.score += 500
+    def update_score(self, lines_cleared, move_down_points): #lscore += lines cleared * 100 
+        self.score += lines_cleared * 100
         self.score += move_down_points
 
     def get_random_block(self):
@@ -45,6 +46,7 @@ class Game:
         if self.block_inside() == False or self.block_fits() == False:
             self.current_block.move(-1, 0)
             self.lock_block()
+            pygame.time.set_timer(GAME_UPDATE, 300)
 
     def lock_block(self):
         tiles = self.current_block.get_cell_positions()

@@ -1,0 +1,5 @@
+import pygame
+
+GAME_UPDATE = pygame.USEREVENT
+FAST_DROP_SPEED = 50
+NORMAL_DROP_SPEED = 300
