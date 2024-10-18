@@ -34,7 +34,7 @@ class IBlock(Block):
         }
         self.move(-1,4)
 
-class OBlock(Block):
+class oBlock(Block):
     def __init__(self):
         super().__init__(id = 4)
         self.cells = {
@@ -46,7 +46,7 @@ class OBlock(Block):
         self.move(0,4)
 
 #i made it
-class oBlock(Block):
+class OBlock(Block):
     def __init__(self):
         super().__init__(id = 5)
         self.cells = {
@@ -68,7 +68,7 @@ class SBlock(Block):
         }
         self.move(0,4)
 
-class TBlock(Block):
+class tBlock(Block):
     def __init__(self):
         super().__init__(id = 7)
         self.cells = {
@@ -80,7 +80,7 @@ class TBlock(Block):
         self.move(0,4)
 
 #i made it
-class tBlock(Block):
+class TBlock(Block):
     def __init__(self):
         super().__init__(id = 8)
         self.cells = {

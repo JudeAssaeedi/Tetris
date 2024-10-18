@@ -17,8 +17,7 @@ class Game:
         self.next_block = self.get_random_block()
         self.game_over = False
         self.score = 0
-        #self.rotate_sound = pygame.mixer.sound("Name of sound file")
-        #self.clear_sound = pygame.mixer.sound("Name of sound file")
+        self.animation_in_progress = False  # Initialize the flag
         
     def update_score(self, lines_cleared, move_down_points): #lscore += lines cleared * 100 
         self.score += lines_cleared * 100
@@ -41,25 +40,66 @@ class Game:
         if self.block_inside() == False or self.block_fits() == False:
             self.current_block.move(0, -1)
 
-    def move_down(self):
+    def move_down(self, screen):
         self.current_block.move(1, 0)
         if self.block_inside() == False or self.block_fits() == False:
             self.current_block.move(-1, 0)
-            self.lock_block()
+            self.lock_block(screen)
             pygame.time.set_timer(GAME_UPDATE, 300)
 
-    def lock_block(self):
+    def animate_row_clear(self, screen, rows_to_clear):
+        # This method will handle the animation for row clearing.
+        # 'rows_to_clear' contains the list of rows that need to be cleared.
+
+        # You can customize this animation loop based on your needs.
+        animation_speed = 100  # Customize the speed of the animation
+
+        for row in rows_to_clear:
+            for col in range(self.grid.num_cols):
+                # Here we make the blocks disappear from the middle block by block
+                mid_col = self.grid.num_cols // 2
+
+                for offset in range(mid_col + 1):
+                    if mid_col - offset >= 0:
+                        # Clear the left side block by block
+                        self.grid.grid[row][mid_col - offset] = 0
+                    if mid_col + offset < self.grid.num_cols:
+                        # Clear the right side block by block
+                        self.grid.grid[row][mid_col + offset] = 0
+
+                    # Redraw the screen to show the animation step
+                    self.draw(screen)  # Assuming draw method will redraw the grid and blocks
+                    pygame.display.update()
+
+                    # Control the speed of the animation
+                    pygame.time.wait(animation_speed)
+
+        # After the animation is done, clear the rows from the grid
+        self.grid.clear_row(rows_to_clear)
+
+
+    def lock_block(self, screen):
+
         tiles = self.current_block.get_cell_positions()
         for position in tiles:
             self.grid.grid[position.row][position.column] = self.current_block.id
+
+        # Switch to the next block
         self.current_block = self.next_block
         self.next_block = self.get_random_block()
-        rows_cleared = self.grid.clear_full_row()  # Clear any full rows
-        if rows_cleared > 0:
-            #self.clear_sound.play()
-            self.update_score(rows_cleared, 0)
-        if self.block_fits() == False:
-            self.game_over = True
+
+        # Clear full rows and trigger animation if necessary
+        rows_to_clear = self.grid.clear_full_row()  # Get rows to clear
+        
+        if rows_to_clear:
+            self.grid.rows_to_clear = rows_to_clear  # Store the rows for animation
+            self.grid.animate_clear_row(rows_to_clear[0])  # Start animation for the first row
+            self.update_score(len(rows_to_clear), 0)  # Update score based on cleared rows
+        else:
+            # Check if the next block fits only if no rows were cleared
+            if not self.block_fits():
+                self.game_over = True
+
 
     def reset(self):
         self.grid.reset()
